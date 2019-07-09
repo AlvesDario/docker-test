@@ -9,11 +9,12 @@ const Item = [];
 
 app.get('/', (req, res) => {
   try{
-    // console.log(req.query.name);
-    Item.push(req.query)
+    // console.log(req);
+    Item.push(req.query.name);
     console.log("added");
+    res.send(Item);
   }catch(error){ error => console.log(error)};
-  console.log(Item);
+  // console.log(Item);
 });
 
 server.listen(2000, () => {
