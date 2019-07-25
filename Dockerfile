@@ -1,12 +1,12 @@
 from node:10
 
-workdir /usr/src
+workdir /usr/app
 
 copy package.json ./
 
 run npm install
 
-copy . .
+copy . ./src
 
 expose 2000
 

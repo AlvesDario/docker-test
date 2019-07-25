@@ -1,22 +1,31 @@
 const express = require('express');
 const app = express();
-
-const server = require('http').Server(app);
+const mongoose = require('mongoose');
 app.use(express.json());
 
-// app.use(require('./rotas'));
-const Item = [];
+const Item = require('./models/item');
+
+mongoose
+  .connect(
+    'mongodb://mongo:27017/docker-test',
+    { useNewUrlParser: true }
+  )
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log(err));
 
 app.get('/', (req, res) => {
-  try{
-    // console.log(req);
-    Item.push(req.query.name);
-    console.log("added");
-    res.send(Item);
-  }catch(error){ error => console.log(error)};
-  // console.log(Item);
+  Item.find()
+    .then(items => res.send({ items }))
+    .catch(err => res.status(404).json({ msg: 'No items found' }));
 });
 
-server.listen(2000, () => {
-    console.log('iniciado');
+app.post('/item/add', (req, res) => {
+  const newItem = new Item({
+    name: req.body.name
+  });
+  newItem.save().then(item => res.redirect('/'));
+});
+
+app.listen(2000, () => {
+  console.log("working");
 });
